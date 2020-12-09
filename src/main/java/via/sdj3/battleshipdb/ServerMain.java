@@ -1,15 +1,17 @@
 package via.sdj3.battleshipdb;
 
-import via.sdj3.battleshipdb.dao.UserDao;
-import via.sdj3.battleshipdb.dao.UserDataAccess;
+import via.sdj3.battleshipdb.dataaccess.UserHome;
+import via.sdj3.battleshipdb.dataaccess.InMemoryUser;
 import via.sdj3.battleshipdb.mediator.Connector;
 
-import java.io.IOException;
+import java.sql.SQLException;
 
 public class ServerMain {
-  public static void main(String[] args) {
-    UserDao userDao = new UserDataAccess();
-    Thread thread = new Thread(new Connector(userDao));
+  public static void main(String[] args) throws SQLException {
+    UserHome userHome = new InMemoryUser();
+    Thread thread = new Thread(new Connector(userHome));
     thread.start();
+
+    userHome.validateUser("alex","12434");
   }
 }

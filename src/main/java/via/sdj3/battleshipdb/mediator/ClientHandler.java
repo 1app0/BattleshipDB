@@ -5,7 +5,7 @@ import Exceptions.InvalidUsernameException;
 import com.google.gson.Gson;
 import util.Message;
 import util.MessageType;
-import via.sdj3.battleshipdb.dao.UserDao;
+import via.sdj3.battleshipdb.dataaccess.UserHome;
 import via.sdj3.battleshipdb.model.User;
 
 import java.io.BufferedReader;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class ClientHandler implements Runnable {
   private Socket socket;
@@ -20,14 +21,15 @@ public class ClientHandler implements Runnable {
   private PrintWriter out;
   private boolean running;
   private Gson gson;
-  private UserDao userDao;
+  private UserHome userHome;
 
-  public ClientHandler(Socket socket, UserDao userDao) throws IOException {
+  //changed everywhere from userDao to userHome
+  public ClientHandler(Socket socket, UserHome userHome) throws IOException {
     this.socket = socket;
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     out = new PrintWriter(socket.getOutputStream(), true);
     gson = new Gson();
-    this.userDao = userDao;
+    this.userHome = userHome;
   }
 
   public void run() {
@@ -37,12 +39,12 @@ public class ClientHandler implements Runnable {
         String request = in.readLine();
         Message message = gson.fromJson(request, Message.class);
         User userToBeValidated = gson.fromJson(message.getMessage(), User.class);
-        User validatedUser = userDao.validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
+        User validatedUser = userHome.validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
         String validatedUserAsJson = gson.toJson(validatedUser);
         Message answer = new Message(validatedUserAsJson, MessageType.VALID_USER);
         String answerAsJson = gson.toJson(answer);
         out.println(answerAsJson);
-      } catch(IOException e) {
+      } catch(IOException | SQLException e) {
         close();
       }
       catch (InvalidUsernameException e) {
