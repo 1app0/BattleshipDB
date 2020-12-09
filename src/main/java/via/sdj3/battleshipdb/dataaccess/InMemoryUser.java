@@ -36,7 +36,7 @@ public class InMemoryUser implements UserHome {
 
     User filteredUser;
     try {
-      filteredUser = userList.stream().filter(user -> user.getUsername().equals(username)).findFirst().get();
+      filteredUser = realUserDataAccess.getUserByName(username);
     }
     catch (Exception e) {
       throw new InvalidUsernameException("User not found");

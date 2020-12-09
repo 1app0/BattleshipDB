@@ -14,17 +14,29 @@ public class RealUserDataAccess implements userDAO{
                         "postgres", "VolkovaS1793");
     }
 
-    @Override public User checkNameByInput(String username) throws SQLException {
+    @Override public User getUserByName(String username) throws SQLException {
 
         User filteredUser;
         Connection connection = getConnection();
-
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT COUNT(*) FROM login WHERE username=?");
+                    .prepareStatement("SELECT * FROM login WHERE username=?");
             statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
-            rs.next();
-            return rs.getInt(1) > 0;
+            while(rs.next())
+            {
+                String usernameDB = rs.getString("name");
+                String passwordDB = rs.getString("password");
+                String accessTypeDB = rs.getString("accessType");
+
+                filteredUser=new User(usernameDB,passwordDB,accessTypeDB);
+                statement.close();
+                connection.close();
+            }
+
+            return filteredUser;
+
+
+
 
 
     }

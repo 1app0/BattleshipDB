@@ -4,6 +4,6 @@ import java.sql.SQLException;
 
 public interface userDAO {
 
-    boolean checkNameByInput(String username) throws SQLException;
+    boolean getUserByName(String username) throws SQLException;
     boolean checkPasswordByInput(String username,String password) throws SQLException;
 }
