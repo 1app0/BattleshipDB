@@ -17,7 +17,7 @@ public class UserDataAccess implements UserDao {
     userList.add(new User("alex", "1234", "registeredUser"));
     userList.add(new User("shrek", "shrekIsLife", "registeredUser"));
   }
-  //asdasdaskjdhaskjdhkasdhajsk
+
 
   @Override public User validateUser(String username, String password)
       throws InvalidUsernameException, InvalidPasswordException {
