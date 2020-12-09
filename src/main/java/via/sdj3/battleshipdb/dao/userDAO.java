@@ -1,9 +1,11 @@
 package via.sdj3.battleshipdb.dao;
 
+import via.sdj3.battleshipdb.model.User;
+
 import java.sql.SQLException;
 
 public interface userDAO {
 
-    boolean getUserByName(String username) throws SQLException;
+    User getUserByName(String username) throws SQLException;
     boolean checkPasswordByInput(String username,String password) throws SQLException;
 }
