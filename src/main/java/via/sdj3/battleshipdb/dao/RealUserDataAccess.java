@@ -4,6 +4,7 @@ import Exceptions.InvalidUsernameException;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class RealUserDataAccess implements userDAO{
 
@@ -16,15 +17,16 @@ public class RealUserDataAccess implements userDAO{
 
     @Override public User getUserByName(String username) throws SQLException {
 
-        User filteredUser;
+        User filteredUser=null;
         Connection connection = getConnection();
             PreparedStatement statement = connection
                     .prepareStatement("SELECT * FROM login WHERE username=?");
             statement.setString(1, username);
+        System.out.println("login attempt");
             ResultSet rs = statement.executeQuery();
             while(rs.next())
             {
-                String usernameDB = rs.getString("name");
+                String usernameDB = rs.getString("username");
                 String passwordDB = rs.getString("password");
                 String accessTypeDB = rs.getString("accessType");
 
@@ -34,9 +36,6 @@ public class RealUserDataAccess implements userDAO{
             }
 
             return filteredUser;
-
-
-
 
 
     }
