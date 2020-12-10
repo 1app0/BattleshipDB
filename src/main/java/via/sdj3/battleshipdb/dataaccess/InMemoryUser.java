@@ -2,20 +2,17 @@ package via.sdj3.battleshipdb.dataaccess;
 
 import Exceptions.InvalidPasswordException;
 import Exceptions.InvalidUsernameException;
-import util.Message;
-import util.MessageType;
-import via.sdj3.battleshipdb.dao.RealUserDataAccess;
+import via.sdj3.battleshipdb.dao.UserDAO;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class InMemoryUser implements UserHome {
-  private List<User> userList;
-  RealUserDataAccess realUserDataAccess;
+  private UserDAO realUserDataAccess;
 
-  public InMemoryUser() {
-    this.realUserDataAccess = new RealUserDataAccess();
+  public InMemoryUser(UserDAO userDAO) {
+    realUserDataAccess = userDAO;
   }
   public void tryClass()
   {
