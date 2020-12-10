@@ -12,7 +12,7 @@ public class Connector implements Runnable{
   private ServerSocket welcomeSocket;
   private UserHome userHome;
 
-  public Connector(UserHome userDao){
+  public Connector(UserHome userHome){
     this.userHome = userHome;
   }
 

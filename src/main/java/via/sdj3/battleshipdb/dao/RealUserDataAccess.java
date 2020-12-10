@@ -1,5 +1,6 @@
 package via.sdj3.battleshipdb.dao;
 
+import Exceptions.InvalidUsernameException;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.*;
@@ -10,10 +11,11 @@ public class RealUserDataAccess implements UserDAO {
     {
         return DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/SEP3_Battleship",
-                        "postgres", "VolkovaS1793");
+                        "postgres", "2031");
     }
 
-    @Override public User getUserByName(String username) throws SQLException {
+    @Override public User getUserByName(String username)
+        throws SQLException, InvalidUsernameException {
 
         User filteredUser = null;
         Connection connection = getConnection();
@@ -30,7 +32,9 @@ public class RealUserDataAccess implements UserDAO {
             statement.close();
             connection.close();
         }
-
+        if (filteredUser == null){
+            throw new InvalidUsernameException("User not found");
+        }
         return filteredUser;
     }
 

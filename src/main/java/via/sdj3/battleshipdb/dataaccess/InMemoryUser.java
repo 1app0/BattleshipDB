@@ -35,8 +35,8 @@ public class InMemoryUser implements UserHome {
     try {
       filteredUser = realUserDataAccess.getUserByName(username);
     }
-    catch (Exception e) {
-      throw new InvalidUsernameException("User not found");
+    catch (InvalidUsernameException userNotFound) {
+      throw userNotFound;
     }
     if (!filteredUser.getPassword().equals(password)) {
       throw new InvalidPasswordException("Invalid password");

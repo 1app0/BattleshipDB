@@ -7,6 +7,7 @@ import via.sdj3.battleshipdb.dao.UserDAO;
 import via.sdj3.battleshipdb.dataaccess.UserHome;
 import via.sdj3.battleshipdb.dataaccess.InMemoryUser;
 import via.sdj3.battleshipdb.mediator.Connector;
+import via.sdj3.battleshipdb.model.User;
 
 import java.sql.SQLException;
 
@@ -16,7 +17,5 @@ public class ServerMain {
     UserHome userHome = new InMemoryUser(realUserDataAccess);
     Thread thread = new Thread(new Connector(userHome));
     thread.start();
-
-    userHome.validateUser("alex","1234");
   }
 }
