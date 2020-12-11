@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface UserDAO {
 
-    User getUserByName(String username)
-        throws SQLException, InvalidUsernameException;
+    User getUserByName(String username) throws SQLException, InvalidUsernameException;
     boolean checkPasswordByInput(String username,String password) throws SQLException;
+    void createUser(String username,String password) throws SQLException;
 }

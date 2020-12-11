@@ -11,7 +11,7 @@ public class RealUserDataAccess implements UserDAO {
     {
         return DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/SEP3_Battleship",
-                        "postgres", "2031");
+                        "postgres", "VolkovaS1793");
     }
 
     @Override public User getUserByName(String username)
@@ -55,13 +55,33 @@ public class RealUserDataAccess implements UserDAO {
         catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("error!!!!!!");
+            System.out.println("error!");
             return false;
         }
     }
 
+    @Override
+    public void createUser(String username, String password) throws SQLException {
+        Connection connection=getConnection();
+        try
+        {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO login(username,password,accessType) VALUES(?,?,?);");
+            statement.setString(1,username);
+            statement.setString(2, password);
+            statement.setString(3,"registeredUser");
+            statement.executeUpdate();
+            statement.close();
+            connection.close();
 
-
+        }
+        catch (Exception e)
+        {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.out.println("error creating user(register)");
+            System.exit(0);
+        }
+    }
 
 
 }
