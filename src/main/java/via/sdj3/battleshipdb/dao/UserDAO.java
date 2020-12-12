@@ -11,4 +11,5 @@ public interface UserDAO {
     User getUserByName(String username) throws SQLException, InvalidUsernameException;
     boolean checkPasswordByInput(String username,String password) throws SQLException;
     void createUser(String username,String password) throws SQLException;
+    boolean checkNameByInput(String name) throws SQLException;
 }

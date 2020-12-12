@@ -2,6 +2,8 @@ package via.sdj3.battleshipdb.dataaccess;
 
 import Exceptions.InvalidPasswordException;
 import Exceptions.InvalidUsernameException;
+import util.Message;
+import util.MessageType;
 import via.sdj3.battleshipdb.dao.UserDAO;
 import via.sdj3.battleshipdb.model.User;
 
@@ -44,10 +46,25 @@ public class InMemoryUser implements UserHome {
     return filteredUser;
   }
 
+  @Override
+  public Message registerUSer(String username, String password) throws SQLException
+  {
+    tryClass();
 
+    if(findUser(username))
+    {
+      System.out.println("This username already exists");
+      return  new Message("This username already exists",MessageType.REGISTER_RESULT);
+    }
+    else {
+      realUserDataAccess.createUser(username,password);
+      System.out.println("Register was successful");
+      return new Message("Register was successful",MessageType.REGISTER_RESULT);
+    }
+  }
 
-//  private boolean findUser(String username) throws SQLException
-//  {
-//    return realUserDataAccess.checkNameByInput(username);
-//  }
+  private boolean findUser(String username) throws SQLException
+  {
+    return realUserDataAccess.checkNameByInput(username);
+  }
 }

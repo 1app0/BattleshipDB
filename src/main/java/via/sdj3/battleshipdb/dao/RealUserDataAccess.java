@@ -60,6 +60,30 @@ public class RealUserDataAccess implements UserDAO {
         }
     }
 
+    @Override public boolean checkNameByInput(String name) throws SQLException
+    {
+
+        Connection connection = getConnection();
+        try
+        {
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT COUNT(*) FROM login WHERE name=?");
+            statement.setString(1, name);
+            ResultSet rs = statement.executeQuery();
+            rs.next();
+            return rs.getInt(1) > 0;
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("error!!!!!!");
+            return false;
+
+        }
+
+    }
+
     @Override
     public void createUser(String username, String password) throws SQLException {
         Connection connection=getConnection();

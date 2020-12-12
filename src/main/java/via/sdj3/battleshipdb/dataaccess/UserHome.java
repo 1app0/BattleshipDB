@@ -9,6 +9,6 @@ import java.sql.SQLException;
 
 public interface UserHome {
   User validateUser(String username, String password) throws SQLException, InvalidUsernameException, InvalidPasswordException;
-  //Creating it because I can do it quickly, if what deleting it is not an issue
-
+  //Creating it because it is pretty simple, if what deleting it is not an issue
+  Message registerUSer(String name, String password) throws SQLException;
 }
