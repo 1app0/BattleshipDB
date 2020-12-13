@@ -2,6 +2,7 @@ package via.sdj3.battleshipdb.mediator;
 
 import Exceptions.InvalidPasswordException;
 import Exceptions.InvalidUsernameException;
+import Exceptions.UsernameTakenException;
 import com.google.gson.Gson;
 import util.Message;
 import util.MessageType;
@@ -38,12 +39,22 @@ public class ClientHandler implements Runnable {
       try {
         String request = in.readLine();
         Message message = gson.fromJson(request, Message.class);
-        User userToBeValidated = gson.fromJson(message.getMessage(), User.class);
-        User validatedUser = userHome.validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
-        String validatedUserAsJson = gson.toJson(validatedUser);
-        Message answer = new Message(validatedUserAsJson, MessageType.VALID_USER);
-        String answerAsJson = gson.toJson(answer);
-        out.println(answerAsJson);
+        switch (message.getType()) {
+          case VALIDATE_USER:
+            User userToBeValidated = gson.fromJson(message.getMessage(), User.class);
+            User validatedUser = userHome.validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
+            String validatedUserAsJson = gson.toJson(validatedUser);
+            Message answer = new Message(validatedUserAsJson, MessageType.VALID_USER);
+            String answerAsJson = gson.toJson(answer);
+            out.println(answerAsJson);
+            break;
+          case REGISTER_USER:
+            User userToBeRegistered = gson.fromJson(message.getMessage(), User.class);
+            userHome.registerUser(userToBeRegistered.getUsername(), userToBeRegistered.getPassword());
+            String messageAsJson = gson.toJson(new Message(MessageType.REGISTER_USER_SUCCESS));
+            out.println(messageAsJson);
+            break;
+        }
       } catch(IOException | SQLException e) {
         close();
       }
@@ -54,6 +65,11 @@ public class ClientHandler implements Runnable {
       }
       catch (InvalidPasswordException e) {
         Message message = new Message(MessageType.INVALID_PASSWORD);
+        String json = gson.toJson(message);
+        out.println(json);
+      }
+      catch (UsernameTakenException e) {
+        Message message = new Message(MessageType.REGISTER_USER_USERNAMETAKEN);
         String json = gson.toJson(message);
         out.println(json);
       }

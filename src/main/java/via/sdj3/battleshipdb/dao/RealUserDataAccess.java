@@ -11,7 +11,7 @@ public class RealUserDataAccess implements UserDAO {
     {
         return DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/SEP3_Battleship",
-                        "postgres", "VolkovaS1793");
+                        "postgres", "2031");
     }
 
     @Override public User getUserByName(String username)
@@ -60,15 +60,15 @@ public class RealUserDataAccess implements UserDAO {
         }
     }
 
-    @Override public boolean checkNameByInput(String name) throws SQLException
+    @Override public boolean checkNameByInput(String username) throws SQLException
     {
 
         Connection connection = getConnection();
         try
         {
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT COUNT(*) FROM login WHERE name=?");
-            statement.setString(1, name);
+                    .prepareStatement("SELECT COUNT(*) FROM login WHERE username=?");
+            statement.setString(1, username);
             ResultSet rs = statement.executeQuery();
             rs.next();
             return rs.getInt(1) > 0;
@@ -79,7 +79,6 @@ public class RealUserDataAccess implements UserDAO {
             e.printStackTrace();
             System.out.println("error!!!!!!");
             return false;
-
         }
 
     }
