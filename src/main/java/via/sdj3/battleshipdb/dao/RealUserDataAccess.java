@@ -85,15 +85,17 @@ public class RealUserDataAccess implements UserDAO {
     }
 
     @Override
-    public String matchSave(String username,String playerMatch, String botMatch) throws SQLException {
+    public String matchSave(String username,String playerMatch, String botMatch, int numberOfShipsBot, int numberOfShipsPlayer) throws SQLException {
 
         Connection connection=getConnection();
 
         PreparedStatement statement=connection
-                .prepareStatement("INSERT INTO match(username,playerMatch,botMatch) VALUES (?,?,?);");
+                .prepareStatement("INSERT INTO match(username,playerMatch,botMatch,numberOfShipsBot,numberOfShipsPlayer) VALUES (?,?,?,?,?);");
         statement.setString(1,username);
         statement.setString(2,playerMatch);
         statement.setString(3,botMatch);
+        statement.setInt(4,numberOfShipsBot);
+        statement.setInt(5,numberOfShipsPlayer);
         statement.executeUpdate();
         statement.close();
         connection.close();
@@ -101,13 +103,15 @@ public class RealUserDataAccess implements UserDAO {
         return "Game has been saved";
     }
 
-    //Needs to be converted into Message type
+
     @Override
     public String matchLoad(String username) throws SQLException {
         Connection connection=getConnection();
 
         String playerMatch = null;
         String botMatch =null;
+        int numberOfShipsBot = 0;
+        int numberOfShipsPlayer = 0;
 
         PreparedStatement statement=connection
                 .prepareStatement("SELECT * FROM match WHERE username=?");
@@ -118,10 +122,24 @@ public class RealUserDataAccess implements UserDAO {
         {
             playerMatch = rs.getString("playerMatch");
             botMatch= rs.getString("botMatch");
+            numberOfShipsBot=rs.getInt("numberOfShipsBot");
+            numberOfShipsPlayer=rs.getInt("numberOfShipsPlayer");
             statement.close();
             connection.close();
         }
-        return  "player match log: " + playerMatch + " bot match log: " + botMatch;
+        return  "player match log: " + playerMatch + " bot match log: " + botMatch + " Bot ship number " + numberOfShipsBot + " Player ship number " + numberOfShipsPlayer;
+    }
+
+    @Override
+    public void deleteSave(String username) throws SQLException {
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+                .prepareStatement("DELETE FROM match WHERE username=?");
+        statement.setString(1,username);
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
     }
 
     @Override

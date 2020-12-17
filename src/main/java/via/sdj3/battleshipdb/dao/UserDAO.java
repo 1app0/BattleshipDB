@@ -13,6 +13,7 @@ public interface UserDAO {
     boolean checkPasswordByInput(String username,String password) throws SQLException;
     void createUser(String username,String password) throws SQLException;
     boolean checkNameByInput(String name) throws SQLException;
-    String matchSave(String username,String playerMatch, String botMatch) throws SQLException;
+    String matchSave(String username,String playerMatch, String botMatch, int numberOfShipsBot, int numberOfShipsPlayer) throws SQLException;
     String matchLoad(String username) throws SQLException;
+    void deleteSave(String username) throws SQLException;
 }
