@@ -24,7 +24,6 @@ public class ClientHandler implements Runnable {
   private Gson gson;
   private UserHome userHome;
 
-  //changed everywhere from userDao to userHome
   public ClientHandler(Socket socket, UserHome userHome) throws IOException {
     this.socket = socket;
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
