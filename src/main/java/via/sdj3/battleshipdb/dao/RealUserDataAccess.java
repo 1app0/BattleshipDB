@@ -119,7 +119,7 @@ public class RealUserDataAccess implements UserDAO {
             statement.close();
             connection.close();
         }
-        return  "Data successfully saved!";
+        return  "player match log: " + playerMatch + " bot match log: " + botMatch;
     }
 
     @Override
