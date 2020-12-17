@@ -85,7 +85,7 @@ public class RealUserDataAccess implements UserDAO {
     }
 
     @Override
-    public void matchSave(String username,String playerMatch, String botMatch) throws SQLException {
+    public String matchSave(String username,String playerMatch, String botMatch) throws SQLException {
 
         Connection connection=getConnection();
 
@@ -97,6 +97,8 @@ public class RealUserDataAccess implements UserDAO {
         statement.executeUpdate();
         statement.close();
         connection.close();
+
+        return "Game has been saved";
     }
 
     //Needs to be converted into Message type
