@@ -1,6 +1,7 @@
 package via.sdj3.battleshipdb.dao;
 
 import Exceptions.InvalidUsernameException;
+import util.Message;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.SQLException;
@@ -12,4 +13,6 @@ public interface UserDAO {
     boolean checkPasswordByInput(String username,String password) throws SQLException;
     void createUser(String username,String password) throws SQLException;
     boolean checkNameByInput(String name) throws SQLException;
+    void matchSave(String username,String playerMatch, String botMatch) throws SQLException;
+    String matchLoad(String username) throws SQLException;
 }

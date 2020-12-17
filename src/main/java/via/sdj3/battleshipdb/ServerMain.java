@@ -17,5 +17,8 @@ public class ServerMain {
     UserHome userHome = new InMemoryUser(realUserDataAccess);
     Thread thread = new Thread(new Connector(userHome));
     thread.start();
+
+
+
   }
 }

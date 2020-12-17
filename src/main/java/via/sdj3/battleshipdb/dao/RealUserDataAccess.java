@@ -1,6 +1,7 @@
 package via.sdj3.battleshipdb.dao;
 
 import Exceptions.InvalidUsernameException;
+import util.Message;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.*;
@@ -11,7 +12,7 @@ public class RealUserDataAccess implements UserDAO {
     {
         return DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/SEP3_Battleship",
-                        "postgres", "2031");
+                        "postgres", "VolkovaS1793");
     }
 
     @Override public User getUserByName(String username)
@@ -81,6 +82,44 @@ public class RealUserDataAccess implements UserDAO {
             return false;
         }
 
+    }
+
+    @Override
+    public void matchSave(String username,String playerMatch, String botMatch) throws SQLException {
+
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+                .prepareStatement("INSERT INTO match(username,playerMatch,botMatch) VALUES (?,?,?);");
+        statement.setString(1,username);
+        statement.setString(2,playerMatch);
+        statement.setString(3,botMatch);
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+    }
+
+    //Needs to be converted into Message type
+    @Override
+    public String matchLoad(String username) throws SQLException {
+        Connection connection=getConnection();
+
+        String playerMatch = null;
+        String botMatch =null;
+
+        PreparedStatement statement=connection
+                .prepareStatement("SELECT * FROM match WHERE username=?");
+        statement.setString(1,username);
+        ResultSet rs = statement.executeQuery();
+
+        while(rs.next())
+        {
+            playerMatch = rs.getString("playerMatch");
+            botMatch= rs.getString("botMatch");
+            statement.close();
+            connection.close();
+        }
+        return  "Data successfully saved!";
     }
 
     @Override
