@@ -17,4 +17,7 @@ public interface GameDAO {
     String matchLoad(String username) throws SQLException;
     void deleteSave(String username) throws SQLException;
     boolean checkForSavedGame(String username) throws SQLException;
+    void addingWin(String username) throws SQLException;
+    void addingLoss(String username) throws SQLException;
+    String historyScore(String username) throws SQLException;
 }

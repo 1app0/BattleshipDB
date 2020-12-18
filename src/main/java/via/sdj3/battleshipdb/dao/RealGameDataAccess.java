@@ -154,6 +154,53 @@ public class RealGameDataAccess implements GameDAO {
     }
 
     @Override
+    public void addingWin(String username) throws SQLException {
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+                .prepareStatement("UPDATE historyView SET wins = wins + 1 WHERE username=?");
+        statement.setString(1,username);
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+    }
+
+    @Override
+    public void addingLoss(String username) throws SQLException {
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+                .prepareStatement("UPDATE historyView SET losses = losses + 1 WHERE username=?");
+        statement.setString(1,username);
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+    }
+
+    @Override
+    public String historyScore(String username) throws SQLException {
+        int winCount=0;
+        int lossCount=0;
+
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+                .prepareStatement("SELECT wins,losses FROM historyView WHERE username = ?");
+        statement.setString(1,username);
+        ResultSet rs = statement.executeQuery();
+
+        while(rs.next())
+        {
+            winCount=rs.getInt("wins");
+            winCount=rs.getInt("losses");
+            statement.close();
+            connection.close();
+        }
+
+        return "Wins: " + winCount + " Losses: " + lossCount;
+    }
+
+    @Override
     public void createUser(String username, String password) throws SQLException {
         Connection connection=getConnection();
         try
