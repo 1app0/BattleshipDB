@@ -1,6 +1,6 @@
 package via.sdj3.battleshipdb.mediator;
 
-import via.sdj3.battleshipdb.dataaccess.UserHome;
+import via.sdj3.battleshipdb.dataaccess.DBAccess;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,10 +10,10 @@ public class Connector implements Runnable{
   private final int port = 7990;
   private boolean running;
   private ServerSocket welcomeSocket;
-  private UserHome userHome;
+  private DBAccess dbAccess;
 
-  public Connector(UserHome userHome){
-    this.userHome = userHome;
+  public Connector(DBAccess dbAccess){
+    this.dbAccess = dbAccess;
   }
 
   public void run() {
@@ -31,7 +31,7 @@ public class Connector implements Runnable{
     running = true;
     while (running) {
       Socket socket = welcomeSocket.accept();
-      Thread thread = new Thread(new ClientHandler(socket, userHome));
+      Thread thread = new Thread(new ClientHandler(socket, dbAccess));
       thread.setDaemon(true);
       thread.start();
     }

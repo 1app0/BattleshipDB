@@ -1,28 +1,25 @@
 package via.sdj3.battleshipdb.dao;
 
 import Exceptions.InvalidUsernameException;
-import util.Message;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.*;
 
-public class RealUserDataAccess implements UserDAO {
+public class RealGameDataAccess implements GameDAO {
 
     private Connection getConnection() throws SQLException
     {
         return DriverManager
                 .getConnection("jdbc:postgresql://localhost:5432/SEP3_Battleship",
-                        "postgres", "VolkovaS1793");
+                        "postgres", "2031");
     }
 
     @Override public User getUserByName(String username)
         throws SQLException, InvalidUsernameException {
-
         User filteredUser = null;
         Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM login WHERE username=?");
         statement.setString(1, username);
-        System.out.println("login attempt");
         ResultSet rs = statement.executeQuery();
         while(rs.next())
         {
@@ -140,6 +137,20 @@ public class RealUserDataAccess implements UserDAO {
         statement.executeUpdate();
         statement.close();
         connection.close();
+    }
+
+    public boolean checkForSavedGame(String username) throws SQLException {
+        Connection connection=getConnection();
+
+        PreparedStatement statement=connection
+            .prepareStatement("SELECT COUNT(*) FROM match WHERE username=?");
+
+        statement.setString(1,username);
+        ResultSet rs = statement.executeQuery();
+
+        rs.next();
+        return rs.getInt(1) > 0;
+
     }
 
     @Override

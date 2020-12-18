@@ -6,7 +6,8 @@ import Exceptions.UsernameTakenException;
 import com.google.gson.Gson;
 import util.Message;
 import util.MessageType;
-import via.sdj3.battleshipdb.dataaccess.UserHome;
+import via.sdj3.battleshipdb.dataaccess.DBAccess;
+import via.sdj3.battleshipdb.model.GameConfig;
 import via.sdj3.battleshipdb.model.User;
 
 import java.io.BufferedReader;
@@ -22,14 +23,14 @@ public class ClientHandler implements Runnable {
   private PrintWriter out;
   private boolean running;
   private Gson gson;
-  private UserHome userHome;
+  private DBAccess dbAccess;
 
-  public ClientHandler(Socket socket, UserHome userHome) throws IOException {
+  public ClientHandler(Socket socket, DBAccess dbAccess) throws IOException {
     this.socket = socket;
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     out = new PrintWriter(socket.getOutputStream(), true);
     gson = new Gson();
-    this.userHome = userHome;
+    this.dbAccess = dbAccess;
   }
 
   public void run() {
@@ -41,7 +42,8 @@ public class ClientHandler implements Runnable {
         switch (message.getType()) {
           case VALIDATE_USER:
             User userToBeValidated = gson.fromJson(message.getMessage(), User.class);
-            User validatedUser = userHome.validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
+            User validatedUser = dbAccess
+                .validateUser(userToBeValidated.getUsername(), userToBeValidated.getPassword());
             String validatedUserAsJson = gson.toJson(validatedUser);
             Message answer = new Message(validatedUserAsJson, MessageType.VALID_USER);
             String answerAsJson = gson.toJson(answer);
@@ -49,9 +51,22 @@ public class ClientHandler implements Runnable {
             break;
           case REGISTER_USER:
             User userToBeRegistered = gson.fromJson(message.getMessage(), User.class);
-            userHome.registerUser(userToBeRegistered.getUsername(), userToBeRegistered.getPassword());
+            dbAccess.registerUser(userToBeRegistered.getUsername(), userToBeRegistered.getPassword());
             String messageAsJson = gson.toJson(new Message(MessageType.REGISTER_USER_SUCCESS));
             out.println(messageAsJson);
+            break;
+          case SAVEGAME:
+            GameConfig gameConfig = gson.fromJson(message.getMessage(), GameConfig.class);
+            String username = gameConfig.getUsername();
+            String botConfig = gson.toJson(gameConfig.getBotGameTilesConfig());
+            String playerConfig = gson.toJson(
+                gameConfig.getPlayerGameTilesConfig());
+            int botShipsLeft = gameConfig.getBotShipsLeft();
+            int playerShipsLeft = gameConfig.getPlayerShipsLeft();
+            String response = dbAccess.matchSave(username, playerConfig, botConfig, botShipsLeft, playerShipsLeft);
+            Message serverResponse = new Message(response, MessageType.SAVEGAME_RESPONSE);
+            String serverResponseAsJson = gson.toJson(serverResponse);
+            out.println(serverResponseAsJson);
             break;
         }
       } catch(IOException | SQLException e) {

@@ -3,20 +3,18 @@ package via.sdj3.battleshipdb.dataaccess;
 import Exceptions.InvalidPasswordException;
 import Exceptions.InvalidUsernameException;
 import Exceptions.UsernameTakenException;
-import util.Message;
-import util.MessageType;
-import via.sdj3.battleshipdb.dao.UserDAO;
+import via.sdj3.battleshipdb.dao.GameDAO;
 import via.sdj3.battleshipdb.model.User;
 
 import java.sql.SQLException;
-import java.util.List;
 
-public class InMemoryUser implements UserHome {
-  private UserDAO realUserDataAccess;
+public class DbDirectAccess implements DBAccess {
+  private GameDAO realUserDataAccess;
 
-  public InMemoryUser(UserDAO userDAO) {
-    realUserDataAccess = userDAO;
+  public DbDirectAccess(GameDAO realUserDataAccess) {
+    this.realUserDataAccess = realUserDataAccess;
   }
+
   public void tryClass()
   {
     try
@@ -61,6 +59,21 @@ public class InMemoryUser implements UserHome {
       realUserDataAccess.createUser(username,password);
       System.out.println("Register was successful");
     }
+  }
+
+  @Override public String matchSave(String username, String playerMatch,
+      String botMatch, int numberOfShipsBot, int numberOfShipsPlayer)
+      throws SQLException {
+    return realUserDataAccess.matchSave(username, playerMatch, botMatch, numberOfShipsBot, numberOfShipsPlayer);
+  }
+
+  //TODO finish these methods
+  @Override public String matchLoad(String username) throws SQLException {
+    return null;
+  }
+
+  @Override public void deleteSave(String username) throws SQLException {
+
   }
 
   private boolean findUser(String username) throws SQLException
